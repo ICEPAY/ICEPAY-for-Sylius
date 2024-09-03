@@ -3,7 +3,7 @@ FROM php:8.2-apache
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN apt-get update && apt-get -y install zip git libsodium-dev zlib1g-dev libzip-dev libpng-dev libicu-dev
 
-RUN docker-php-ext-install exif sodium gd intl zip
+RUN docker-php-ext-install exif sodium gd intl zip mysqli pdo pdo_mysql
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf

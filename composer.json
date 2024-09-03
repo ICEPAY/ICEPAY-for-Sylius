@@ -83,6 +83,9 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "security-checker security:check": "script"
-        }
+        },
+        "install": [
+            "@php -dmemory_limit=1G bin/console sylius:install"
+        ]
     }
 }
