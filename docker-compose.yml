@@ -3,6 +3,7 @@ services:
     build: .
     volumes:
       - .env:/var/www/html/.env
+      - ./:/var/www/packages/ICEPAY
     ports:
       - 8011:80
   db:

@@ -1,4 +1,5 @@
 {
+    "name": "icepay/icepay-for-sylius",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
@@ -86,6 +87,9 @@
         },
         "install": [
             "@php -dmemory_limit=1G bin/console sylius:install"
+        ],
+        "fix": [
+            "composer require icepay/icepay-for-sylius"
         ]
     }
 }

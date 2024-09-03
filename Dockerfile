@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN apt-get update && apt-get -y install zip git libsodium-dev zlib1g-dev libzip-dev libpng-dev libicu-dev
+RUN apt-get update && apt-get -y install zip git libsodium-dev zlib1g-dev libzip-dev libpng-dev libicu-dev npm
 
 RUN docker-php-ext-install exif sodium gd intl zip mysqli pdo pdo_mysql
 
@@ -12,3 +12,5 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 
 RUN COMPOSER_MEMORY_LIMIT=-1 composer create-project sylius/sylius-standard /var/www/html/
+RUN composer config repositories.local-packages '{"type": "path", "url": "/var/www/packages", "options": {"symlink": true}}'
+RUN npm install -g yarn && /usr/local/bin/yarn install && /usr/local/bin/yarn build
