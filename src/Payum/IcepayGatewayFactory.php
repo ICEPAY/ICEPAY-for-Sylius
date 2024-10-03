@@ -6,6 +6,7 @@ namespace SyliusIcepayPlugin\Payum;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
+use SyliusIcepayPlugin\Payum\Action\StatusAction;
 
 final class IcepayGatewayFactory extends GatewayFactory
 {
@@ -14,10 +15,11 @@ final class IcepayGatewayFactory extends GatewayFactory
         $config->defaults([
             'payum.factory_name' => 'icepay',
             'payum.factory_title' => 'ICEPAY',
+            'payum.action.status' => new StatusAction(),
         ]);
 
         $config['payum.api'] = function (ArrayObject $config) {
-            return new IcepayApi($config['api_key']);
+            return new IcepayApi($config['merchant_id'], $config['secret']);
         };
     }
 }
