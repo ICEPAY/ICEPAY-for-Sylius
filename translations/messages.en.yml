@@ -1,0 +1,3 @@
+icepay:
+    merchant_id: "Merchant ID"
+    secret: "Secret"

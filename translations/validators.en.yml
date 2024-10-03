@@ -1,0 +1,5 @@
+icepay:
+    merchant_id:
+        not_blank: "Merchant ID cannot be empty"
+    secret:
+        not_blank: "Secret cannot be empty"

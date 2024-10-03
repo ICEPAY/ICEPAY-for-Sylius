@@ -7,15 +7,13 @@ namespace SyliusIcepayPlugin\Payum;
 final class IcepayApi
 {
     /** @var string */
-    private $apiKey;
+    private $merchantId;
+    private $secret;
 
-    public function __construct(string $apiKey)
+    public function __construct(string $merchantId, $secret)
     {
-        $this->apiKey = $apiKey;
+        $this->merchantId = $merchantId;
+        $this->secret = $secret;
     }
 
-    public function getApiKey(): string
-    {
-        return $this->apiKey;
-    }
 }
