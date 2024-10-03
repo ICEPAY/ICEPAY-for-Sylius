@@ -7,9 +7,8 @@ namespace SyliusIcepayPlugin\Payum\Action;
 use Payum\Core\Reply\HttpRedirect;
 use Payum\Core\Security\GenericTokenFactoryAwareInterface;
 use Payum\Core\Security\GenericTokenFactoryAwareTrait;
+use Sylius\Bundle\PayumBundle\Provider\PaymentDescriptionProviderInterface;
 use SyliusIcepayPlugin\Payum\IcepayApi;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -22,10 +21,12 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Generic
 {
     use GenericTokenFactoryAwareTrait;
 
-    /** @var Client */
-    private $client;
     /** @var IcepayApi */
     private $api;
+
+    public function __construct(private PaymentDescriptionProviderInterface $paymentDescription)
+    {
+    }
 
     public function execute($request): void
     {
@@ -40,16 +41,18 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Generic
             $request->getToken()->getGatewayName(),
             $request->getToken()->getDetails()
         );
-        $webhookUrl = $notifyToken->getTargetUrl();
-        $redirectUrl = $request->getToken()->getTargetUrl();
 
-//        $details['reference'] = $payment->getOrder()->getId();
-//        $details['description'] = $payment->getDescription();
-//        $details['amount'] = [
-//            'value' => $payment->getAmount(),
-//            'currency' => $payment->getCurrencyCode(),
+        $body['reference'] = (string)$payment->getOrder()->getId();
+        $body['description'] = $this->paymentDescription->getPaymentDescription($payment);
+        $body['amount'] = [
+            'value' => $payment->getAmount(),
+            'currency' => $payment->getCurrencyCode(),
+        ];
+        $body['redirectUrl'] = $request->getToken()->getTargetUrl();
+        $body['webhookUrl'] = $notifyToken->getTargetUrl();
 
-        throw new HttpRedirect("https://icepay.com");
+        [ $isSuccessful, $payment ] = $this->api->create($body);
+        throw new HttpRedirect($payment['links']['checkout']);
     }
 
     public function supports($request): bool
