@@ -90,4 +90,8 @@ final class IcepayApi
         return $response;
     }
 
+    public function validateSignature(string $content, string $signature): bool {
+        return $signature === base64_encode(hash_hmac( 'sha256', $content, $this->secret, true ));
+    }
+
 }

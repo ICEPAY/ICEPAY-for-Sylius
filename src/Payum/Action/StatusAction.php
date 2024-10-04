@@ -20,9 +20,31 @@ final class StatusAction implements ActionInterface
 
         $details = $payment->getDetails();
 
-        $request->markNew();
-        return;
+        if (!isset($details['status']) || !isset($details['key'])) {
+            $request->markNew();
+            return;
+        }
 
+        switch ($details['status']) {
+            case 'started':
+                $request->markNew();
+                break;
+            case 'cancelled':
+                $request->markCanceled();
+                break;
+            case 'expired':
+                $request->markFailed();
+                break;
+            case 'pending':
+                $request->markPending();
+                break;
+            case 'completed':
+                $request->markCaptured();
+                break;
+            default:
+                $request->markUnknown();
+                break;
+        }
     }
 
     public function supports($request): bool
