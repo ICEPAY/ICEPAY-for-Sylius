@@ -5,12 +5,21 @@ declare(strict_types=1);
 namespace SyliusIcepayPlugin\Payum\Action;
 
 use Payum\Core\Action\ActionInterface;
+use Payum\Core\ApiAwareInterface;
+use Payum\Core\ApiAwareTrait;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetStatusInterface;
 use Sylius\Component\Core\Model\PaymentInterface as SyliusPaymentInterface;
+use SyliusIcepayPlugin\Payum\IcepayApi;
 
-final class StatusAction implements ActionInterface
+final class StatusAction implements ActionInterface, ApiAwareInterface
 {
+    use ApiAwareTrait;
+
+    public function __construct()
+    {
+        $this->apiClass = IcepayApi::class;
+    }
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
@@ -20,10 +29,12 @@ final class StatusAction implements ActionInterface
 
         $details = $payment->getDetails();
 
-        if (!isset($details['status']) || !isset($details['key'])) {
+        if (!isset($details['key'])) {
             $request->markNew();
             return;
         }
+
+        $details['status'] = $this->api->get($details['key']);
 
         switch ($details['status']) {
             case 'started':

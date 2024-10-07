@@ -53,41 +53,18 @@ final class IcepayApi
             $request_args['body'] = json_encode( $body );
         }
 
-        $response = $this->wp_remote_request(
-            self::Endpoint . $uri,
-            $request_args
-        );
+        try {
+            $response = $this->client->request('POST', self::Endpoint . $uri, $request_args);
+        } catch (\Exception $e) {
+            return [ false, [ 'message' => $e->getMessage() ] ];
+        }
 
-//        if ( is_wp_error( $response ) ) {
-//            return [ false, [ 'message' => $response->get_error_message() ] ];
-//        }
-
-//        $responseBody          = json_decode( wp_remote_retrieve_body( $response ), true );
         $responseBody          = json_decode(  (string)$response->getBody() , true );
-//        $responseStatusCode    = wp_remote_retrieve_response_code( $response );
-//        $responseStatusMessage = wp_remote_retrieve_response_message( $response );
-//
-//        if ( $responseStatusCode < 200 || $responseStatusCode >= 300 ) {
-//            return [
-//                false,
-//                [
-//                    'message' => $responseStatusCode . ': ' . $responseStatusMessage . '<br>'
-//                        . 'message: ' . $responseBody['message'] . '<br>'
-//                        . 'documentation: ' . $responseBody['documentation']['link']
-//                ]
-//            ];
-//        }
-
         return [ true, $responseBody ];
     }
 
     protected function toBasicAuthorization(): string {
         return 'Basic ' . base64_encode( $this->merchantId . ':' . $this->secret );
-    }
-
-    protected function wp_remote_request( string $url, array $args ) {
-        $response = $this->client->request('POST', $url, $args);
-        return $response;
     }
 
     public function validateSignature(string $content, string $signature): bool {
