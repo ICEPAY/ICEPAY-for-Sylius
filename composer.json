@@ -1,5 +1,7 @@
 {
+    "name": "icepay/sylius-plugin",
     "type": "sylius-plugin",
+    "description": "ICEPAY payment plugin for Sylius",
     "keywords": [
         "sylius",
         "sylius-plugin"
@@ -60,8 +62,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "SyliusIcepayPlugin\\": "src/",
+            "Tests\\SyliusIcepayPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

@@ -2,7 +2,21 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="Acme\SyliusExamplePlugin\Controller\GreetingController" autowire="true" autoconfigure="true" public="true" />
-        <!-- Put your services here -->
+        <service id="app.sylius_payment" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
+            <argument>SyliusIcepayPlugin\Payum\IcepayGatewayFactory</argument>
+            <tag name="payum.gateway_factory_builder" factory="icepay" />
+        </service>
+        <service id="SyliusIcepayPlugin\Form\Type\IcepayGatewayConfigurationType">
+            <tag name="sylius.gateway_configuration_type" type="icepay" label="ICEPAY" />
+            <tag name="form.type" />
+        </service>
+        <service id="SyliusIcepayPlugin\Payum\Action\CaptureAction" public="true">
+<!--            <argument type="service" id="sylius.http_client" />-->
+            <argument type="service" id="sylius.payment_description_provider" />
+            <tag name="payum.action" factory="icepay" alias="payum.action.capture" />
+        </service>
+        <service id="SyliusIcepayPlugin\Payum\Action\NotifyAction" public="true">
+            <tag name="payum.action" factory="icepay" alias="payum.action.notify" />
+        </service>
     </services>
 </container>
