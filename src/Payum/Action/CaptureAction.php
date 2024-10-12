@@ -47,11 +47,11 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Generic
             return;
         }
 
-        $details['key'] = $checkout->key;
+        $details['key'] = $checkout['key'];
         $details['status'] = 'started';
         $payment->setDetails((array) $details);
 
-        throw new HttpRedirect($payment['links']['checkout']);
+        throw new HttpRedirect($checkout['links']['checkout']);
     }
 
     private function getBody($payment, $token): array
@@ -63,7 +63,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Generic
                 'value' => $payment->getAmount(),
                 'currency' => $payment->getCurrencyCode(),
             ],
-            'redirectUrl' => $token->getTargetUrl(),
+            'redirectUrl' => $token->getAfterUrl(),
             'webhookUrl' => $this->tokenFactory->createNotifyToken(
                 $token->getGatewayName(),
                 $token->getDetails()

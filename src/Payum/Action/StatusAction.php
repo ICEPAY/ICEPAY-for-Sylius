@@ -34,7 +34,13 @@ final class StatusAction implements ActionInterface, ApiAwareInterface
             return;
         }
 
-        $details['status'] = $this->api->get($details['key']);
+        [$isSuccessful, $checkout] = $this->api->get($details['key']);
+        if ( ! $isSuccessful ) {
+            $request->markFailed();
+            return;
+        }
+
+        $details['status'] = $checkout['status'];
 
         switch ($details['status']) {
             case 'started':
