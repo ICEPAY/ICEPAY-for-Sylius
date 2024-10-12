@@ -54,7 +54,7 @@ final class IcepayApi
         }
 
         try {
-            $response = $this->client->request('POST', self::Endpoint . $uri, $request_args);
+            $response = $this->client->request($method, self::Endpoint . $uri, $request_args);
         } catch (\Exception $e) {
             return [ false, [ 'message' => $e->getMessage() ] ];
         }
