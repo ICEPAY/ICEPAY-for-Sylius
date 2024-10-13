@@ -11,12 +11,15 @@
             <tag name="form.type" />
         </service>
         <service id="SyliusIcepayPlugin\Payum\Action\CaptureAction" public="true">
-<!--            <argument type="service" id="sylius.http_client" />-->
             <argument type="service" id="sylius.payment_description_provider" />
             <tag name="payum.action" factory="icepay" alias="payum.action.capture" />
         </service>
         <service id="SyliusIcepayPlugin\Payum\Action\NotifyAction" public="true">
             <tag name="payum.action" factory="icepay" alias="payum.action.notify" />
+        </service>
+        <service id="SyliusIcepayPlugin\Payum\IcepayApi" />
+        <service id="SyliusIcepayPlugin\Processor\IcepayPaymentRefundProcessor" public="true">
+            <argument type="service" id="SyliusIcepayPlugin\Payum\IcepayApi" />
         </service>
     </services>
 </container>

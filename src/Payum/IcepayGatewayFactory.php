@@ -19,7 +19,9 @@ final class IcepayGatewayFactory extends GatewayFactory
         ]);
 
         $config['payum.api'] = function (ArrayObject $config) {
-            return new IcepayApi($config['merchant_id'], $config['secret']);
+            $icepayApiClient = new IcepayApi();
+            $icepayApiClient->setConfig($config['merchant_id'], $config['secret']);
+            return $icepayApiClient;
         };
     }
 }

@@ -12,9 +12,18 @@ final class IcepayApi
 
     private Client $client;
 
-    public function __construct(protected ?string $merchantId, protected ?string $secret)
+    private string $merchantId;
+
+    private string $secret;
+
+    public function __construct()
     {
         $this->client = new Client();
+    }
+
+    public function setConfig(string $merchantId, string $secret) {
+        $this->merchantId = $merchantId;
+        $this->secret = $secret;
     }
 
     public function create( array $data ): array {
