@@ -1,0 +1,8 @@
+winzou_state_machine:
+    sylius_payment:
+        callbacks:
+            before:
+                refund_icepay_order:
+                    on: ['refund']
+                    do: ['@SyliusIcepayPlugin\Processor\IcepayPaymentRefundProcessor', 'refund']
+                    args: ['object']

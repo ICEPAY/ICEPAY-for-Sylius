@@ -32,6 +32,16 @@ return [
 ];
 ```
 
+4. If refunds need to be processed through ICEPAY, import the following configuration:
+
+```yaml
+# config/packages/_sylius.yaml
+
+imports:
+    # ...
+    - { resource: "@SyliusIcepayPlugin/config/config.yml" }
+```
+
 ### Docker
 
 1. Execute `docker compose up -d`
